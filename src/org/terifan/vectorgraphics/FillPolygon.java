@@ -1,24 +1,24 @@
-package org.terifan.ui.vectorgraphics;
+package org.terifan.vectorgraphics;
 
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 
 
-public class DrawPolygon extends Polygon implements Primitive
+public class FillPolygon extends Polygon implements Primitive
 {
-	public DrawPolygon()
+	public FillPolygon()
 	{
 	}
 
 
-	public DrawPolygon(int[] xpoints, int[] ypoints, int npoints)
+	public FillPolygon(int[] xpoints, int[] ypoints, int npoints)
 	{
 		super(xpoints, ypoints, npoints);
 	}
 
 
 
-	public DrawPolygon(int ... aCoords)
+	public FillPolygon(int ... aCoords)
 	{
 		for (int i = 0; i < aCoords.length; i+=2)
 		{
@@ -29,6 +29,6 @@ public class DrawPolygon extends Polygon implements Primitive
 
 	public void render(Graphics2D g)
 	{
-		g.drawPolygon(this);
+		g.fillPolygon(this);
 	}
 }

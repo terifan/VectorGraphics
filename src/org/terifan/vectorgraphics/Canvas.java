@@ -1,4 +1,4 @@
-package org.terifan.ui.vectorgraphics;
+package org.terifan.vectorgraphics;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -167,14 +167,12 @@ public class Canvas extends JComponent
 	 * a read lock and if necessary block if any other thread is currently
 	 * writing to the graphic tree.
 	 */
-	public void render(Graphics2D aGraphics)
+	public void render(Graphics2D g)
 	{
 		mLock.readLock().lock();
 
 		try
 		{
-			Graphics2D g = aGraphics;
-
 			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);

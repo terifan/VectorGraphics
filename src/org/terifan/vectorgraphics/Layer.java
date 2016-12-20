@@ -1,4 +1,4 @@
-package org.terifan.ui.vectorgraphics;
+package org.terifan.vectorgraphics;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -22,9 +22,6 @@ public class Layer
 {
 	private static FontRenderContext FRC = new FontRenderContext(new AffineTransform(), false, false);
 
-//	public final ValueList<Element> elements = new ValueList<Element>();
-//	public final ValueList<Layer> layers = new ValueList<Layer>();
-
 	protected ArrayList<Element> mElements;
 	protected ArrayList<Layer> mLayers;
 	protected Point mTranslate;
@@ -36,9 +33,9 @@ public class Layer
 
 	Layer()
 	{
-		mElements = new ArrayList<Element>();
-		mLayers = new ArrayList<Layer>();
-		mIdentities = new HashMap<String, Element>();
+		mElements = new ArrayList<>();
+		mLayers = new ArrayList<>();
+		mIdentities = new HashMap<>();
 		mTranslate = new Point();
 
 		add(new Font("Tahoma", Font.PLAIN, 11));
@@ -423,7 +420,7 @@ public class Layer
 		}
 		else
 		{
-			list = new ArrayList<String>();
+			list = new ArrayList<>();
 			list.add(Utilities.clipString(aString, font, aRectWidth));
 		}
 

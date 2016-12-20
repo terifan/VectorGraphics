@@ -1,4 +1,4 @@
-package org.terifan.ui.vectorgraphics;
+package org.terifan.vectorgraphics;
 
 
 public interface RegionSelector

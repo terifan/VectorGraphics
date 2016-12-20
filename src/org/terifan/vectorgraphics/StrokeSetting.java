@@ -1,4 +1,4 @@
-package org.terifan.ui.vectorgraphics;
+package org.terifan.vectorgraphics;
 
 import java.awt.Stroke;
 import java.awt.Graphics2D;

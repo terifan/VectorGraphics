@@ -1,4 +1,4 @@
-package org.terifan.ui.vectorgraphics;
+package org.terifan.vectorgraphics;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
