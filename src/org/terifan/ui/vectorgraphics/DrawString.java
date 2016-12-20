@@ -2,8 +2,6 @@ package org.terifan.ui.vectorgraphics;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import org.terifan.ui.Anchor;
-import org.terifan.ui.Utilities;
 
 
 public class DrawString extends Rectangle implements Primitive

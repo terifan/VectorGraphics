@@ -16,8 +16,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import org.terifan.ui.Anchor;
-import org.terifan.ui.Utilities;
 
 
 public class Layer

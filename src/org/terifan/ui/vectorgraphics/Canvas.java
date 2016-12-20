@@ -5,13 +5,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.swing.JComponent;
-import org.terifan.ui.Anchor;
-import org.terifan.ui.Utilities;
 
 
 public class Canvas extends JComponent
@@ -28,9 +27,9 @@ public class Canvas extends JComponent
 
 	public Canvas()
 	{
-		mMap = new HashMap<String, Layer>();
-		mLayers = new ArrayList<Layer>();
-		mRenderStateListeners = new ArrayList<RenderStateListener>();
+		mMap = new HashMap<>();
+		mLayers = new ArrayList<>();
+		mRenderStateListeners = new ArrayList<>();
 		mMinimumSize = new Dimension();
 		mLock = new ReentrantReadWriteLock();
 
@@ -166,17 +165,19 @@ public class Canvas extends JComponent
 	/**
 	 * Will render the graph tree onto this Canvas. This method will aquire
 	 * a read lock and if necessary block if any other thread is currently
-	 * writing to the graphi tree.
+	 * writing to the graphic tree.
 	 */
-	public void render(Graphics2D g)
+	public void render(Graphics2D aGraphics)
 	{
 		mLock.readLock().lock();
 
 		try
 		{
-			Utilities.enableTextAntialiasing(g);
-			Utilities.enableAntialiasing(g);
-			Utilities.enableBilinear(g);
+			Graphics2D g = aGraphics;
+
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
 			for (RenderStateListener listener : mRenderStateListeners)
 			{
