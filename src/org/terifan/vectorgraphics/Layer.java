@@ -2,6 +2,7 @@ package org.terifan.vectorgraphics;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -16,19 +17,24 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 
 public class Layer
 {
-	private static FontRenderContext FRC = new FontRenderContext(new AffineTransform(), false, false);
+	private final static FontRenderContext FRC = new FontRenderContext(new AffineTransform(), false, false);
 
 	protected ArrayList<Element> mElements;
 	protected ArrayList<Layer> mLayers;
-	protected Point mTranslate;
+	protected Point mPosition;
+	protected Dimension mDimension;
 	protected HashMap<String,Element> mIdentities;
 	protected Layer mParent;
 	protected Canvas mCanvas;
 	protected Color mHighlight;
+	protected Anchor mAnchor;
+	protected Consumer<Layer> mOnMouseEnter;
+	protected Consumer<Layer> mOnMouseExit;
 
 
 	Layer()
@@ -36,9 +42,7 @@ public class Layer
 		mElements = new ArrayList<>();
 		mLayers = new ArrayList<>();
 		mIdentities = new HashMap<>();
-		mTranslate = new Point();
-
-		add(new Font("Tahoma", Font.PLAIN, 11));
+		mPosition = new Point();
 	}
 
 
@@ -53,6 +57,17 @@ public class Layer
 		Layer layer = new Layer();
 		layer.mCanvas = mCanvas;
 		layer.mParent = this;
+		mLayers.add(layer);
+		return layer;
+	}
+
+
+	public Layer createLayer(int aX, int aY, int aW, int aH)
+	{
+		Layer layer = new Layer();
+		layer.position(aX, aY);
+		layer.mParent = this;
+		layer.mDimension = new Dimension(aW, aH);
 		mLayers.add(layer);
 		return layer;
 	}
@@ -162,16 +177,23 @@ public class Layer
 	}
 
 
+	public void position(int x, int y)
+	{
+		mPosition.x = x;
+		mPosition.y = y;
+	}
+
+
 	public void translate(int x, int y)
 	{
-		mTranslate.x = x;
-		mTranslate.y = y;
+		mPosition.x += x;
+		mPosition.y += y;
 	}
 
 
 	public void render(Graphics2D aGraphics)
 	{
-		aGraphics.translate(mTranslate.x, mTranslate.y);
+		aGraphics.translate(mPosition.x, mPosition.y);
 
 		for (Element element : mElements)
 		{
@@ -204,7 +226,7 @@ public class Layer
 			layer.render(aGraphics);
 		}
 
-		aGraphics.translate(-mTranslate.x, -mTranslate.y);
+		aGraphics.translate(-mPosition.x, -mPosition.y);
 	}
 
 
@@ -259,7 +281,11 @@ public class Layer
 				return ((FontSetting)mElements.get(i)).getFont();
 			}
 		}
-		return new Font("arial", Font.PLAIN, 10);
+		if (mParent == null && mCanvas.hasComponent())
+		{
+			return mCanvas.getComponent().getFont();
+		}
+		return mParent.getFont();
 	}
 
 
@@ -290,6 +316,10 @@ public class Layer
 				return ((StrokeSetting)mElements.get(i)).getStroke();
 			}
 		}
+		if (mParent != null)
+		{
+			return mParent.getStroke();
+		}
 		return new BasicStroke();
 	}
 
@@ -306,13 +336,13 @@ public class Layer
 	}
 
 
-	public void drawImage(BufferedImage aImage, int x, int y, Object a)
+	public void drawImage(BufferedImage aImage, int x, int y)
 	{
 		add(new DrawImage(aImage, x, y));
 	}
 
 
-	public void drawImage(BufferedImage aImage, int x, int y, int w, int h, Object a)
+	public void drawImage(BufferedImage aImage, int x, int y, int w, int h)
 	{
 		add(new DrawImage(aImage, x, y, w, h));
 	}
@@ -408,6 +438,12 @@ public class Layer
 	}
 
 
+	public void drawString(String aString, Anchor aAnchor)
+	{
+		add(new DrawString(aString, 0, 0, mDimension.width, mDimension.height, aAnchor, false));
+	}
+
+
 	public Rectangle getTextBounds(String aString, int aRectX, int aRectY, int aRectWidth, int aRectHeight, Anchor aAnchor, boolean aMultiline, boolean aLimitLines)
 	{
 		Font font = getFont();
@@ -491,8 +527,8 @@ public class Layer
 	{
 		try
 		{
-			aPoint.x -= mTranslate.x;
-			aPoint.y -= mTranslate.y;
+			aPoint.x -= mPosition.x;
+			aPoint.y -= mPosition.y;
 
 			for (Layer layer : mLayers)
 			{
@@ -519,8 +555,60 @@ public class Layer
 		}
 		finally
 		{
-			aPoint.x += mTranslate.x;
-			aPoint.y += mTranslate.y;
+			aPoint.x += mPosition.x;
+			aPoint.y += mPosition.y;
+		}
+	}
+
+
+	public Layer setAnchor(Anchor aConnector)
+	{
+		mAnchor = aConnector;
+		return this;
+	}
+
+
+	public Anchor getAnchor()
+	{
+		return mAnchor;
+	}
+
+
+	public Layer onMouseEnter(Consumer<Layer> aAction)
+	{
+		mOnMouseEnter = aAction;
+		return this;
+	}
+
+
+	public Layer onMouseExit(Consumer<Layer> aAction)
+	{
+		mOnMouseExit = aAction;
+		return this;
+	}
+
+
+	void intersect(Point aPoint, ArrayList oResult)
+	{
+//		if (getBounds().contains(aPoint))
+		{
+			oResult.add(this);
+
+			for (Element element : mElements)
+			{
+				if (element instanceof Primitive)
+				{
+					Primitive primitive = (Primitive)element;
+					if (primitive.getBounds().contains(aPoint))
+					{
+						oResult.add(primitive);
+					}
+				}
+			}
+			for (Layer layer : mLayers)
+			{
+				layer.intersect(aPoint, oResult);
+			}
 		}
 	}
 }
