@@ -23,7 +23,7 @@ public class Canvas
 	protected HashMap<String, Layer> mMap;
 	protected ArrayList<Layer> mLayers;
 	protected Anchor mAnchor;
-	protected Point mPosition;
+//	protected Point mPosition;
 	protected Rectangle mBounds;
 	protected Dimension mMinimumSize;
 	protected ReentrantReadWriteLock mLock;
@@ -242,8 +242,8 @@ public class Canvas
 				@Override
 				public void mouseMoved(MouseEvent aEvent)
 				{
-					ArrayList region = intersect(aEvent.getPoint());
-					System.out.println(region);
+//					ArrayList region = intersect(aEvent.getPoint());
+//					System.out.println(region);
 				}
 			});
 		}
@@ -290,7 +290,7 @@ public class Canvas
 
 			computeBounds();
 
-			g.translate(mPosition.x, mPosition.y);
+//			g.translate(mPosition.x, mPosition.y);
 
 			for (RenderStateListener listener : mRenderStateListeners)
 			{
@@ -307,7 +307,7 @@ public class Canvas
 				listener.finishRendering(g);
 			}
 
-			g.translate(-mPosition.x, -mPosition.y);
+//			g.translate(-mPosition.x, -mPosition.y);
 		}
 		finally
 		{
@@ -351,7 +351,7 @@ public class Canvas
 		try
 		{
 			aPoint = new Point(aPoint);
-			aPoint.translate(-mPosition.x, -mPosition.y);
+//			aPoint.translate(-mPosition.x, -mPosition.y);
 
 			for (Layer layer : mLayers)
 			{
@@ -399,24 +399,24 @@ public class Canvas
 			mBounds.width = Math.max(mBounds.width, mMinimumSize.width - mBounds.x);
 			mBounds.height = Math.max(mBounds.height, mMinimumSize.height - mBounds.y);
 
-			mPosition = new Point();
-
-			if (mAnchor == Anchor.CENTER || mAnchor == Anchor.NORTH || mAnchor == Anchor.SOUTH)
-			{
-				mPosition.x = getWidth() / 2 - mBounds.x - mBounds.width / 2;
-			}
-			else if (mAnchor == Anchor.EAST || mAnchor == Anchor.SOUTH_EAST || mAnchor == Anchor.NORTH_EAST)
-			{
-				mPosition.x = getWidth() - mBounds.x - mBounds.width - 1;
-			}
-			if (mAnchor == Anchor.CENTER || mAnchor == Anchor.WEST || mAnchor == Anchor.EAST)
-			{
-				mPosition.y = getHeight() / 2 - mBounds.y - mBounds.height / 2;
-			}
-			else if (mAnchor == Anchor.SOUTH || mAnchor == Anchor.SOUTH_EAST || mAnchor == Anchor.SOUTH_WEST)
-			{
-				mPosition.y = getHeight() - mBounds.y - mBounds.height - 1;
-			}
+//			mPosition = new Point();
+//
+//			if (mAnchor == Anchor.CENTER || mAnchor == Anchor.NORTH || mAnchor == Anchor.SOUTH)
+//			{
+//				mPosition.x = getWidth() / 2 - mBounds.x - mBounds.width / 2;
+//			}
+//			else if (mAnchor == Anchor.EAST || mAnchor == Anchor.SOUTH_EAST || mAnchor == Anchor.NORTH_EAST)
+//			{
+//				mPosition.x = getWidth() - mBounds.x - mBounds.width - 1;
+//			}
+//			if (mAnchor == Anchor.CENTER || mAnchor == Anchor.WEST || mAnchor == Anchor.EAST)
+//			{
+//				mPosition.y = getHeight() / 2 - mBounds.y - mBounds.height / 2;
+//			}
+//			else if (mAnchor == Anchor.SOUTH || mAnchor == Anchor.SOUTH_EAST || mAnchor == Anchor.SOUTH_WEST)
+//			{
+//				mPosition.y = getHeight() - mBounds.y - mBounds.height - 1;
+//			}
 		}
 		finally
 		{

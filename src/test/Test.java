@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import org.terifan.vectorgraphics.Anchor;
 import org.terifan.vectorgraphics.Canvas;
 import org.terifan.vectorgraphics.Layer;
@@ -48,7 +49,7 @@ public class Test
 			}
 
 			JFrame frame = new JFrame();
-			frame.add(canvas.getComponent());
+			frame.add(new JScrollPane(canvas.getComponent()));
 			frame.setSize(1650, 1150);
 			frame.setLocationRelativeTo(null);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
